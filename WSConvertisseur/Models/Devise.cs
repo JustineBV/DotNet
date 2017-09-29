@@ -27,8 +27,19 @@ namespace WSConvertisseur.Models
         }
 
 
-
-
+        public override bool Equals(Object dev1)
+        {
+            Devise deviseObj = dev1 as Devise;
+            if (deviseObj == null)
+                return false;
+            if ((this.Id == deviseObj.Id) && this.NomDevise.Equals(deviseObj.NomDevise) && (this.Taux == deviseObj.Taux))
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        
 
     }
 }
