@@ -15,6 +15,10 @@ namespace WSConvertisseur.Controllers
 
 
         // GET: api/Devise
+        /// <summary>
+        /// Permet de retourner toute la liste des devises
+        /// </summary>
+        /// <returns>Liste de devises</returns>
         public IEnumerable<Devise> Get()
         {
             return devises;
@@ -22,6 +26,11 @@ namespace WSConvertisseur.Controllers
 
 
         // GET: api/Devise/5
+        /// <summary>
+        /// Retourne une devise en fonction de l'Id passé en paramètres
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>IHttpActionResult => NotFound si non trouvé (erreur 404), sinon Ok (200) avec la devise en paramètre</returns>
         [ResponseType(typeof(Devise))]
         public IHttpActionResult Get(int id)
         {
@@ -35,6 +44,11 @@ namespace WSConvertisseur.Controllers
 
 
         // POST: api/Devise
+        /// <summary>
+        /// Création d'une devise passée en paramètre si elle correspond bien au modèle
+        /// </summary>
+        /// <param name="devise"></param>
+        /// <returns>IHttpActionResult : BadRequest ou CreatedAtRoute</returns>
         [ResponseType(typeof(Devise))]
         public IHttpActionResult Post(Devise devise)
         {
@@ -47,8 +61,13 @@ namespace WSConvertisseur.Controllers
         }
 
 
-
         // PUT: api/Devise/5
+        /// <summary>
+        /// Modification d'une devise dont l'Id et la devise modifiée sont passés en paramètres
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="devise"></param>
+        /// <returns>IHttpActionResult => BadRequest ou StatusCode(HttpStatusCode.NoContent)</returns>
         [ResponseType(typeof(void))]
         public IHttpActionResult Put(int id, Devise devise)
         {
@@ -69,8 +88,14 @@ namespace WSConvertisseur.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-            // DELETE: api/Devise/5
-            public IHttpActionResult Delete(int id)
+
+        // DELETE: api/Devise/5
+        /// <summary>
+        /// Suppression d'une devise dont l'Id est passé en paramètre
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>IHttpActionResult => NotFound ou Ok(devise) </returns>
+        public IHttpActionResult Delete(int id)
         {
             Devise devise = (from d in devises
                              where d.Id == id
@@ -85,6 +110,9 @@ namespace WSConvertisseur.Controllers
         }
 
 
+        /// <summary>
+        /// Constructeur public sans paramètre
+        /// </summary>
         public DeviseController()
         {
             this.devises = new List<Devise>();

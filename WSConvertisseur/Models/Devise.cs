@@ -13,12 +13,17 @@ namespace WSConvertisseur.Models
 
         public double Taux { get; set; }
 
-
+        /// <summary>
+        /// Constructeur sans paramètre
+        /// </summary>
         public Devise()
         {
 
         }
 
+        /// <summary>
+        /// Constructeur avec en paramètre les différentes properties (id, nom, taux)
+        /// </summary>
         public Devise(int Id, string Nom, double Taux)
         {
             this.Id = Id;
