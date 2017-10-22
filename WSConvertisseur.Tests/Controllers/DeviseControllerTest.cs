@@ -42,12 +42,13 @@ namespace WSConvertisseur.Tests.Controllers
 
             // Act
             var result = controller.Get(1) as OkNegotiatedContentResult<Devise>;
-            IHttpActionResult result1 = controller.Get(15);
+            IHttpActionResult result1 = controller.Get(1);
+            IHttpActionResult result2 = controller.Get(15);
 
             // Assert
-            Assert.IsInstanceOfType(result1, typeof(NotFoundResult));
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<Devise>));
+            Assert.IsInstanceOfType(result2, typeof(NotFoundResult));
+            Assert.IsNotNull(result1);
+            Assert.IsInstanceOfType(result1, typeof(OkNegotiatedContentResult<Devise>));
             Assert.AreEqual(new Devise(1, "Dollar", 1.08), result.Content);
 
         }
@@ -57,10 +58,20 @@ namespace WSConvertisseur.Tests.Controllers
         {
             // Arrange
             DeviseController controller = new DeviseController();
+            Devise d = new Devise();
 
             // Act
+            var result = controller.Post(d) as CreatedAtRouteNegotiatedContentResult<Devise>;
+            IHttpActionResult result1 = controller.Post(new Devise());
 
             // Assert
+            Assert.IsInstanceOfType(result1, typeof(CreatedAtRouteNegotiatedContentResult<Devise>));
+            Assert.AreEqual(d, result.Content);
+
+            controller.ModelState.AddModelError("fakeError", "fakeError");
+            var response = controller.Post(d);
+            Assert.IsInstanceOfType(response, typeof(InvalidModelStateResult));
+
         }
 
 
@@ -69,12 +80,29 @@ namespace WSConvertisseur.Tests.Controllers
         {
             // Arrange
             DeviseController controller = new DeviseController();
+            Devise dFalse = new Devise(7,"test", 2);
+            Devise dUpdated = new Devise(1, "testYes", 2);
 
             // Act
-          //  controller.Put(5, "value");
+            IHttpActionResult result1 = controller.Put(7, dUpdated);
+            var result = controller.Put(7, dUpdated) as StatusCodeResult;
+            IHttpActionResult result2 = controller.Put(2, dFalse);
+            IHttpActionResult result3 = controller.Put(7, dFalse);
+
 
             // Assert
+            Assert.AreEqual(1, dUpdated.Id);
+            Assert.AreEqual(controller.Get(1), result);
+            Assert.IsInstanceOfType(result1, typeof(StatusCodeResult));
+            Assert.IsInstanceOfType(result2, typeof(BadRequestResult)); // devise.id is not the same as the id parameter
+            Assert.IsInstanceOfType(result3, typeof(NotFoundResult)); // Id is not found
+
+
+            controller.ModelState.AddModelError("fakeError", "fakeError");
+            var response = controller.Put(7, dFalse);
+            Assert.IsInstanceOfType(response, typeof(InvalidModelStateResult));
         }
+
 
         [TestMethod]
         public void Delete()
@@ -83,15 +111,16 @@ namespace WSConvertisseur.Tests.Controllers
             DeviseController controller = new DeviseController();
 
             // Act
-            IHttpActionResult result = controller.Delete(5);
-            var result1 = controller.Delete(1) as OkNegotiatedContentResult<Devise>;
+            IHttpActionResult result1 = controller.Delete(2);
+            IHttpActionResult result2 = controller.Delete(15);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+            Assert.IsInstanceOfType(result2, typeof(NotFoundResult));
             Assert.IsNotNull(result1);
             Assert.IsInstanceOfType(result1, typeof(OkNegotiatedContentResult<Devise>));
-            Assert.AreEqual(new Devise(1, "Dollar", 1.08), result1.Content);
-            
+
+            var result = controller.Delete(1) as OkNegotiatedContentResult<Devise>;
+            Assert.AreEqual(new Devise(1, "Dollar", 1.08), result.Content);            
         }
     }
 }
