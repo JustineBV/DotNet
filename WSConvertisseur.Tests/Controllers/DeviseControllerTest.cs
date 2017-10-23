@@ -68,7 +68,7 @@ namespace WSConvertisseur.Tests.Controllers
             Assert.IsInstanceOfType(result1, typeof(CreatedAtRouteNegotiatedContentResult<Devise>));
             Assert.AreEqual(d, result.Content);
 
-            controller.ModelState.AddModelError("fakeError", "fakeError");
+            controller.ModelState.AddModelError("Error", "Error");
             var response = controller.Post(d);
             Assert.IsInstanceOfType(response, typeof(InvalidModelStateResult));
 
@@ -84,23 +84,23 @@ namespace WSConvertisseur.Tests.Controllers
             Devise dUpdated = new Devise(1, "testYes", 2);
 
             // Act
-            IHttpActionResult result1 = controller.Put(7, dUpdated);
-            var result = controller.Put(7, dUpdated) as StatusCodeResult;
+            IHttpActionResult result1 = controller.Put(1, dUpdated);
+            var result = controller.Put(1, dUpdated);
             IHttpActionResult result2 = controller.Put(2, dFalse);
             IHttpActionResult result3 = controller.Put(7, dFalse);
 
 
             // Assert
             Assert.AreEqual(1, dUpdated.Id);
-            Assert.AreEqual(controller.Get(1), result);
+            Assert.AreEqual(dUpdated,controller.Get().ElementAt(0));
             Assert.IsInstanceOfType(result1, typeof(StatusCodeResult));
             Assert.IsInstanceOfType(result2, typeof(BadRequestResult)); // devise.id is not the same as the id parameter
             Assert.IsInstanceOfType(result3, typeof(NotFoundResult)); // Id is not found
 
 
-            controller.ModelState.AddModelError("fakeError", "fakeError");
+            controller.ModelState.AddModelError("Error", "Error");
             var response = controller.Put(7, dFalse);
-            Assert.IsInstanceOfType(response, typeof(InvalidModelStateResult));
+            Assert.IsInstanceOfType(response, typeof(InvalidModelStateResult));            
         }
 
 
